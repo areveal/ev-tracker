@@ -235,6 +235,11 @@ def _build_parser():
     battle_parser.add_argument('--number', '-n', type=int, default=1, help="Number of pokemon battles to record")
     battle_parser.set_defaults(func=_cmd_battle)
 
+    set_ev_parser = subparsers.add_parser('set', help='Set an EV value explicitly')
+    set_ev_parser.add_argument('ev_stat', help='Name of EV Stat to be explicitly set')
+    set_ev_parser.add_argument('ev_value', help='Value of EV to set Stat to')
+    set_ev_parser.set_defaults(func=_cmd_set)
+
     release_parser = subparsers.add_parser('release', help='Stop tracking a Pokemon')
     release_parser.add_argument('id', type=int)
     release_parser.set_defaults(func=_cmd_release)
