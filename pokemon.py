@@ -73,7 +73,6 @@ class EvSet(object):
         return dict
 
 
-
 class Species(object):
 
     def __init__(self, id, name, evs=None):
