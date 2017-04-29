@@ -159,7 +159,11 @@ def _cmd_set(args):
 
 
 def _cmd_update(args):
-    raise NotImplementedError('update command is not yet implemented.')
+    pokemon = _tracker.active
+    pokerus = args.pokerus if args.pokerus else pokemon.pokerus
+    pokemon.update(pokerus=pokerus, item=args.item)
+    print pokemon.status()
+    _save_tracker()
 
 
 def _cmd_battle(args):
@@ -221,11 +225,14 @@ def _build_parser():
     status_parser.set_defaults(func=_cmd_status)
 
     update_parser = subparsers.add_parser('update', help='Update a tracked Pokemon\'s details')
+    update_parser.add_argument('--pokerus', '-p', action='store_true', help='Indicates the given Pokemon has Pokerus')
+    update_parser.add_argument('--item', '-i', help='Add an item to the active pokemon')
     update_parser.set_defaults(func=_cmd_update)
 
     battle_parser = subparsers.add_parser('battle', help='Record a battle for a tracked Pokemon')
     battle_parser.add_argument('species', help='Name of number of Pokemon species to battle')
     battle_parser.add_argument('--id', '-i', type=int)
+    battle_parser.add_argument('--number', '-n', type=int, default=1, help="Number of pokemon battles to record")
     battle_parser.set_defaults(func=_cmd_battle)
 
     release_parser = subparsers.add_parser('release', help='Stop tracking a Pokemon')

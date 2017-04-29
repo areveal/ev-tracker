@@ -105,9 +105,6 @@ class Pokemon(object):
     name = property(lambda self: self.get_name(),
                     lambda self, name: self.set_name(name))
 
-    item = property(lambda self: self._item,
-                    lambda self, item: self.set_item(item))
-
     def get_name(self):
         return self.species.name if self._name is None else self._name
 
@@ -118,7 +115,13 @@ class Pokemon(object):
     def set_item(self, item):
         if item is not None and item not in ITEMS:
             raise ValueError("Invalid item '%s'" % item)
-        self._item = ITEMS[item] if item is not None else None
+        if item:
+            self.item = item
+
+    def update_evs_for_item(self, evs):
+        if self.item:
+            evs = ITEMS[self.item](evs)
+        return evs
 
     def __str__(self):
         name = self.name
@@ -142,8 +145,16 @@ class Pokemon(object):
         padding = '* ' if self is active else '  '
         return '%s%s' % (padding, self)
 
-    def battle(species, number=1):
-        '''
+    def update(self, pokerus, item=None):
+        """
+        Updates the active pokemon
+        :param pokerus: Set pokerus to True or False
+        :param item: give the pokemon an item
+        """
+        self.pokerus = pokerus
+        if item:
+            self.set_item(item=item)
+
     def battle(self, species, number=1):
         """
         Alter's a tracked Pokemons EVs to simulate having battled a Species.
@@ -152,10 +163,15 @@ class Pokemon(object):
         """
         evs = species.evs.clone()
         if self.item is not None:
-            evs = self.item(evs)
+            evs = self.update_evs_for_item(evs)
         if self.pokerus:
             evs *= 2
-        self.evs += evs * number
+        gained_evs = evs * number
+        if number > 1:
+            print "Battled {} x #{} {} \t {}".format(number, species.id, species.name, gained_evs)
+        else:
+            print "Battled #{} {} \t {}".format(species.id, species.name, gained_evs)
+        self.evs += gained_evs
 
     def set_ev(self, ev_stat, ev_value):
         """
