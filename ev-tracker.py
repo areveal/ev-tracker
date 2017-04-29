@@ -151,6 +151,13 @@ def _cmd_status(args):
     print pokemon.status()
 
 
+def _cmd_set(args):
+    pokemon = _tracker.active
+    pokemon.set_ev(ev_stat=args.ev_stat, ev_value=args.ev_value)
+    print pokemon.evs
+    _save_tracker()
+
+
 def _cmd_update(args):
     raise NotImplementedError('update command is not yet implemented.')
 

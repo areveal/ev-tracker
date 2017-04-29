@@ -157,6 +157,19 @@ class Pokemon(object):
             evs *= 2
         self.evs += evs * number
 
+    def set_ev(self, ev_stat, ev_value):
+        """
+        Method to explicitly set an ev value from the command line.
+        Call structure: `ev set hp 134` would set the active pokemon's hp ev to 134
+        :param ev_stat: The stat being explicitly set
+        :param ev_value: The value that should be set for the ev_stat
+        """
+        if ev_stat not in self.evs.STATS:
+            raise AttributeError("{} is not an eligible ev stat".format(ev_stat))
+        evs = self.evs.clone()
+        setattr(evs, ev_stat, int(ev_value))
+        self.evs = evs
+
     def to_dict(self):
         return {'species': self.species.id, 'name': self._name,
                 'pokerus': self.pokerus, 'item': self.item,
