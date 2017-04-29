@@ -145,10 +145,12 @@ class Pokemon(object):
 
     def battle(species, number=1):
         '''
+    def battle(self, species, number=1):
+        """
         Alter's a tracked Pokemons EVs to simulate having battled a Species.
         These values are altered by pokerus and any item held. The EV
         increment can be multiplied by number to simulate multiple battles.
-        '''
+        """
         evs = species.evs.clone()
         if self.item is not None:
             evs = self.item(evs)

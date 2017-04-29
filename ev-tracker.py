@@ -162,10 +162,8 @@ def _cmd_battle(args):
     else:
         pokemon = _tracker.get_pokemon(args.id)
 
-    pokemon.battle(species)
-
-    print evs
-    print pokemon
+    pokemon.battle(species, number=args.number)
+    _save_tracker()
 
 
 def _cmd_release(args):
